@@ -1,26 +1,41 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Input from './Components/Input';
+import Grid from '@material-ui/core/Grid';
+import ReadyButton from './Components/ReadyButton';
+import AppBar from './Components/AppBar';
+
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      ready: null,
+      name: ''
+    }
+  }
+  
+  
   render() {
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <AppBar title="Quizshow" />
+      <Grid container direction="column" alignItems="center">
+      
+      <Grid item>
+        <Input displayName="name"/>
+        <Input displayName="netID"/>
+      </Grid>
+     
+      <Grid item>
+        <ReadyButton buttonText="i am ready"/>
+      </Grid>
+      
+  </Grid>
       </div>
+     
+
     );
   }
 }
