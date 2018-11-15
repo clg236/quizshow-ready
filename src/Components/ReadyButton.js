@@ -14,8 +14,9 @@ const styles = theme => ({
 function ReadyButton(props) {
   const { classes } = props;
   return (
-      <Button className={classes.button}>{props.buttonText}</Button>
-     
+      <Button className={classes.button} onClick={props.handleClicked}>
+        {props.buttonText}
+      </Button>
   );
 }
 

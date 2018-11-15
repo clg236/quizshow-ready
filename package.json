@@ -4,15 +4,17 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.5.1",
+    "firebase": "^5.5.8",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-scripts": "2.1.1"
+    "react-scripts": "2.1.1",
+    "uuid": "^3.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "env-cmd .env react-scripts start",
+    "build": "env-cmd .env react-scripts build",
+    "test": "env-cmd .env react-scripts test",
+    "eject": "env-cmd .env react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -22,5 +24,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "env-cmd": "^8.0.2"
+  }
 }

@@ -25,32 +25,16 @@ const styles = theme => ({
 
 class Input extends React.Component {
 
-    state = {
-      name: '',
-      netid: '',
-      multiline: 'Controlled',
-    };
-  
-    handleChange = name => event => {
-      this.setState({
-        [name]: event.target.value,
-      });
-    };
-
     render() {
         const { classes } = this.props;
     
         return (
-          <form className={classes.container} noValidate autoComplete="off">
-            <TextField
-              id="standard-name"
-              label={this.props.displayName}
-              className={classes.textField}
-              value={this.state.name}
-              onChange={this.handleChange('name')}
-              margin="normal"
-            />
-        </form>
+          <TextField
+            label={this.props.displayName}
+            value={this.props.value}
+            onChange={this.props.handleChanged}
+            margin="normal"
+          />
         )
     }
 }
