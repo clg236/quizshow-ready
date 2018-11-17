@@ -4,7 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import InputBase from '@material-ui/core/InputBase';
+
 
 const styles = theme => ({
 
@@ -42,8 +42,8 @@ function Header(props) {
           <div className={classes.status}>
             {/* this should be a component! */}
             <p>Connected players: {props.activeClients}</p>
-            <p>Ready:: {props.readyClients.join(', ')}</p>
-            <p>Not Ready:: {props.unreadyClients.join(', ')}</p>
+            <p>Ready: {props.readyClients.join(', ')}</p>
+            <p>Not Ready: {props.unreadyClients.join(', ')}</p>
 
           </div>
 
