@@ -43,6 +43,7 @@ class App extends Component {
     this.toggleReadyState = this.toggleReadyState.bind(this);
     this.updateName = this.updateName.bind(this);
     this.updateNetID = this.updateNetID.bind(this);
+    this.updateScore = this.updateScore.bind(this);
   }
 
   /**
@@ -130,6 +131,7 @@ class App extends Component {
   //this function will be called by firebase every time someone connects or performs an
   //action 
   registerFirebaseListeners() {
+    let self = this;
     let clientsRef = firebase.database().ref('activeClients');
 
     // if a new client is connected, increment
@@ -163,7 +165,7 @@ class App extends Component {
             id: client.key,
             name: client.child('ready/name').val(),
             ready: client.child('ready/ready').val(),
-            score: client.child('ready/score').val()
+            score: self.state.clientID == client.key ? self.state.score : client.child('ready/score').val()
           });
 
           if (client.child('ready/ready').val()) {
@@ -188,7 +190,6 @@ class App extends Component {
 
   updateScore = (id, score) => {
 
-    console.log(id, score);
     this.state.connectedClients.filter((item) => {
       return item.id == id;
     }).map((item) => {
