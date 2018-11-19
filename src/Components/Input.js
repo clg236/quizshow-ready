@@ -34,6 +34,7 @@ class Input extends React.Component {
             value={this.props.value}
             onChange={this.props.handleChanged}
             margin="normal"
+            placeholder={this.props.placeHolder}
           />
         )
     }

@@ -42,9 +42,6 @@ function Header(props) {
           <div className={classes.status}>
             {/* this should be a component! */}
             <p>Connected players: {props.activeClients}</p>
-            <p>Ready: {props.readyClients.join(', ')}</p>
-            <p>Not Ready: {props.unreadyClients.join(', ')}</p>
-
           </div>
 
 

@@ -70,13 +70,16 @@ class QuizApp extends Component {
 
     //update our score by one
     if(answer) {
+      this.props.onScoreUpdated(this.props.clientID, this.state.score + 1);
       this.setState({score: this.state.score + 1});
     } else {
+      this.props.onScoreUpdated(this.props.clientID, this.state.score - 1);
       this.setState({score: this.state.score - 1});
     }
 
     //a new random question that hasn't been chosen
     this.nextQuestion();
+
 
     
 

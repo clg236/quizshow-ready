@@ -23,11 +23,8 @@ class App extends Component {
       // am i ready?
       ready: false,
 
-      // all the clients that are ready
-      readyClients: [],
-
-      // all the clients that are not ready
-      unReadyClients: [],
+      // all the connected clients
+      connectedClients: [],
 
       // my name
       name: '',
@@ -36,7 +33,10 @@ class App extends Component {
       netid: '',
 
       //start the game when all players are ready
-      gameStart: false
+      gameStart: false,
+
+      //my score
+      score: 0
 
     }
 
@@ -70,7 +70,8 @@ class App extends Component {
     firebase.database().ref('activeClients/' + this.state.clientID + '/ready').set({
       name: this.state.name,
       netid: this.state.netid,
-      ready: ready
+      ready: ready,
+      score: 0
     });
   }
 
@@ -141,15 +142,16 @@ class App extends Component {
     // if there is any change, let's update the clients
     clientsRef.on('child_changed', (data) => {
     
-      //if all players are ready
-      const ready = this.state.unReadyClients.length;
+      //if all players are ready and equals the number of activeClients, then start
+      //the game
+      const gameStart = true;
+      let numberOfReadyPlayer = 0;
       
       // fetch the latest clients
       firebase.database().ref('activeClients').once('value').then((data) => {
         let updates = {
-          readyClients: [],
-          unReadyClients: [],
-          gameStart: ready
+          gameStart: false,
+          connectedClients: []
         };
 
         data.forEach((client) => {
@@ -157,14 +159,20 @@ class App extends Component {
           if (!client.hasChild('ready') || !client.hasChild('ready/ready') || !client.hasChild('ready/name')) {
             return;
           }
+          updates['connectedClients'].push({
+            id: client.key,
+            name: client.child('ready/name').val(),
+            ready: client.child('ready/ready').val(),
+            score: client.child('ready/score').val()
+          });
 
-          // add to readyClients if it's ready, otherwise unreadyClients
           if (client.child('ready/ready').val()) {
-            updates['readyClients'].push(client.child('ready/name').val());
-          } else {
-            updates['unReadyClients'].push(client.child('ready/name').val());
+            numberOfReadyPlayer ++;
           }
+      
         });
+
+        updates['gameStart'] = numberOfReadyPlayer == this.state.activeClients;
 
         this.setState(updates);
       });
@@ -178,17 +186,38 @@ class App extends Component {
     });
   }
 
+  updateScore = (id, score) => {
+
+    console.log(id, score);
+    this.state.connectedClients.filter((item) => {
+      return item.id == id;
+    }).map((item) => {
+      item.score = score;
+    });
+
+    this.setState({
+      connectedClients: this.state.connectedClients,
+      score: score
+    });
+
+    firebase.database().ref('activeClients/' + this.state.clientID + '/ready').set({
+      id: this.state.clientID,
+      name: this.state.name,
+      ready: true,
+      score: this.state.score
+    });
+  }
+
   render() {
     return (
       <div>
-        <AppBar title="Quizshow" activeClients={this.state.activeClients} readyClients={this.state.readyClients} unreadyClients={this.state.unReadyClients} />
-
+        <AppBar activeClients={this.state.activeClients} />
         {!this.state.gameStart ? <Grid container direction="column" alignItems="center">
 
            <Grid item>
             <form noValidate autoComplete="off">
               <FormControl fullWidth>
-                <Input displayName="name" value={this.state.name} handleChanged={this.updateName} />
+                <Input displayName="name" placeHolder={'A Smart Person'} value={this.state.name} handleChanged={this.updateName} />
               </FormControl>
               <FormControl fullWidth>
                 <Input displayName="netID" value={this.state.netid} handleChanged={this.updateNetID} />
@@ -201,8 +230,9 @@ class App extends Component {
           </Grid>
         </Grid> : null}
         <Grid container direction="column" alignItems="center">
+        <PlayerTable playerStatus={this.state.connectedClients} />
         </Grid>
-        {this.state.gameStart ? <QuizApp playerName={this.state.name}/> : null}
+        {this.state.gameStart ? <QuizApp playerName={this.state.name} clientID={this.state.clientID} onScoreUpdated={this.updateScore}/> : null}
       </div>
 
     );
