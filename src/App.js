@@ -205,7 +205,7 @@ class App extends Component {
       id: this.state.clientID,
       name: this.state.name,
       ready: true,
-      score: this.state.score
+      score: score
     });
   }
 
